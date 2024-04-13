@@ -9696,61 +9696,48 @@ runAzunity(function()
         end
     })
 end)
-run(function()																																																																																																									run(function()
+runFunction(function()
     disabler = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
         Name = "disabler",
+	Hovertext = " Made by yohann",																																																																																																																																																																																																																															
         Function = function(callback)
             if callback then
-                   local ReplicatedStorage = game:GetService("ReplicatedStorage")
-                   local Players = game:GetService("Players")
-                   local RunService = game:GetService("RunService")
-                   local ScytheDash = ReplicatedStorage:WaitForChild("rbxts_include"):WaitForChild("node_modules")["@rbxts"].net.out._NetManaged.ScytheDash
-                   local function onRenderStepped()
-                   local localPlayer = Players.LocalPlayer
-                     if not localPlayer then
-                   return
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local Players = game:GetService("Players")
+                local RunService = game:GetService("RunService")
+                local ScytheDash = ReplicatedStorage:WaitForChild("rbxts_include"):WaitForChild("node_modules")["@rbxts"].net.out._NetManaged.ScytheDash
+
+                local function onRenderStepped()
+                    local localPlayer = Players.LocalPlayer
+                    if not localPlayer then
+                        return
+                    end
+                    local character = localPlayer.Character
+                    if not character then
+                        return
+                    end
+                    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                    if humanoidRootPart then
+                        local lookVector = humanoidRootPart.CFrame.LookVector * 10000
+                        ScytheDash:FireServer({
+                            direction = lookVector
+                        })
+                    end
                 end
-             local character = localPlayer.Character
-                  if not character then
-                return
+                local lastHeartbeat = tick()
+                local function onHeartbeat()
+                    local currentTime = tick()
+                    local elapsedSeconds = currentTime - lastHeartbeat
+                    if elapsedSeconds > 9999 then
+                        lastHeartbeat = currentTime
+                    end
+                end
+
+                RunService.RenderStepped:Connect(onRenderStepped)
+                RunService.Heartbeat:Connect(onHeartbeat)
             end
-            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-             if humanoidRootPart then
-                local lookVector = humanoidRootPart.CFrame.LookVector * 10000
-                   ScytheDash:FireServer({
-                    direction = lookVector
-                })
-          end
-    end
-    local lastHeartbeat = tick()
-    local function onHeartbeat()
-      local currentTime = tick()
-      local elapsedSeconds = currentTime - lastHeartbeat
-        if elapsedSeconds > 9999 then
-          lastHeartbeat = currentTime
-      end
- end
-    local actionInterval = 1
-    local lastActionTime = tick() - actionInterval
-      local function performAction()
-      local currentTime = tick()
-         if currentTime - lastActionTime >= actionInterval then
-          lastActionTime = currentTime
-           SendNotification("Performing action...")
-            onRenderStepped()
-         end
-      end
-
-    RunService.RenderStepped:Connect(onRenderStepped)
-    RunService.Heartbeat:Connect(onHeartbeat)
-
-    while true do
-      RunService.RenderStepped:Wait()
-      performAction()
-    end
- end
-end
-})
+        end
+    })
 end)
 run(function()	
 	TagEraser = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"]["CreateOptionsButton"]({

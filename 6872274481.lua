@@ -9705,8 +9705,7 @@ runFunction(function()
                 local ReplicatedStorage = game:GetService("ReplicatedStorage")
                 local Players = game:GetService("Players")
                 local RunService = game:GetService("RunService")
-                local ScytheDash = game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.ScytheDash:FireServer(unpack(args))
-                local function onRenderStepped()
+                local ScytheDash = bedwars.ClientHandler:Get("ScytheDash"):SendToServer({direction = Vector3.new(6e6, 8e8, 7e7)})                local function onRenderStepped()
                     local localPlayer = Players.LocalPlayer
                     if not localPlayer then
                         return

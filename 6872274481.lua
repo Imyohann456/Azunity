@@ -9696,46 +9696,35 @@ runAzunity(function()
         end
     })
 end)
-runFunction(function()
-    disabler = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
-        Name = "disabler",
-	Hovertext = " Made by yohann",																																																																																																																																																																																																																															
+run(function()
+    local Disabler = {Enabled = false}
+    Disabler = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+        Name = "Disabler",
         Function = function(callback)
-            if callback then
-                local ReplicatedStorage = game:GetService("ReplicatedStorage")
-                local Players = game:GetService("Players")
-                local RunService = game:GetService("RunService")
-                local ScytheDash = bedwars.ClientHandler:Get("ScytheDash"):SendToServer({direction = Vector3.new(6e6, 8e8, 7e7)})                local function onRenderStepped()
-                    local localPlayer = Players.LocalPlayer
-                    if not localPlayer then
-                        return
-                    end
-                    local character = localPlayer.Character
-                    if not character then
-                        return
-                    end
-                    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-                    if humanoidRootPart then
-                        local lookVector = humanoidRootPart.CFrame.LookVector * 10000
-                        ScytheDash:FireServer({
-                            direction = lookVector
-                        })
-                    end
-                end
-                local lastHeartbeat = tick()
-                local function onHeartbeat()
-                    local currentTime = tick()
-                    local elapsedSeconds = currentTime - lastHeartbeat
-                    if elapsedSeconds > 9999 then
-                        lastHeartbeat = currentTime
-                    end
-                end
-
-                RunService.RenderStepped:Connect(onRenderStepped)
-                RunService.Heartbeat:Connect(onHeartbeat)
+            if callback then 
+				task.spawn(function()
+					repeat
+						task.wait(0.03)
+						local item = getItemNear("scythe")
+						if item and lplr.Character.HandInvItem.Value == item.tool then 
+							bedwars.ClientHandler:Get("ScytheDash"):SendToServer({direction = Vector3.new(9e9, 9e9, 9e9)})
+						end
+					until (not Disabler.Enabled)
+				end)
             end
-        end
+        end,
+		HoverText = "funni disabler by yohann"
     })
+end)
+game:GetService('RunService').RenderStepped:Connect(function()
+
+  local args = {
+      [1] = {
+          ["direction"] = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector
+      }
+  }
+
+         game:GetService("ReplicatedStorage").rbxts_include.node_modules["@rbxts"].net.out._NetManaged.ScytheDash:FireServer(unpack(args))
 end)
 run(function()	
 	TagEraser = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"]["CreateOptionsButton"]({
